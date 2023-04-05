@@ -13,7 +13,9 @@ The goal of mice.ninr is to …
 You can install the development version of mice.ninr like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+install.packages("devtools")
+library(devtools)
+install_github("mpitts23/mice.ninr")
 ```
 
 ## Example
@@ -21,7 +23,8 @@ You can install the development version of mice.ninr like so:
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-# library(mice.ninr)
+# install_github("mpitts23/mice.ninr")
+library(mice.ninr)
 ## basic example code
 ```
 
