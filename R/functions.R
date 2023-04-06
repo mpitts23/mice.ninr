@@ -82,7 +82,8 @@ postFunction <- function(i, data, additive, post, dependent_var) {
               post = post,
               maxit = 1,
               m = 200,
-              print = FALSE
+              print = FALSE,
+              seed = 1
   )
   return(imp)
 }
