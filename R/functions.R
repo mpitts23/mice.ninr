@@ -4,7 +4,7 @@
 mice_ninr <- function(data,
                       m = 5,
                       maxit = 5,
-                      printFlag = FALSE,
+                      print = FALSE,
                       control_data,
                       intervention_data,
                       control_delta = c(0, 0, 0, 0),
@@ -32,15 +32,15 @@ mice_ninr <- function(data,
   parameters_G1 <-
     list(delta_G1, df_G1, additive, post, dependent_var)
 
-  list_mids_G0 <- purrr::pmap(parameters_G0, postFunction)
-  list_mids_G1 <- purrr::pmap(parameters_G1, postFunction)
+  list_mids_G0 <- purrr::pmap(parameters_G0, postFunction, m = m, maxit = maxit, print = print)
+  list_mids_G1 <- purrr::pmap(parameters_G1, postFunction, m = m, maxit = maxit, print = print)
 
   parameters_mids <- list(list_mids_G1, list_mids_G0)
 
   list_mids_G1_G0 <- purrr::pmap(parameters_mids, sens_combined)
 }
 
-postFunction <- function(i, data, additive, post, dependent_var) {
+postFunction <- function(i, data, additive, post, dependent_var, m = 5, maxit = 5, print = FALSE) {
   if (additive == TRUE) {
     operation = "+"
   }
@@ -53,9 +53,9 @@ postFunction <- function(i, data, additive, post, dependent_var) {
   imp <- mice(
     data,
     post = post,
-    maxit = 1,
-    m = 200,
-    print = FALSE
+    maxit = maxit,
+    m = m,
+    print = print
   )
   return(imp)
 }
