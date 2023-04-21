@@ -73,18 +73,25 @@ sens_combined <- function(mids1, mids2) {
   return(mids_G1_G0)
 }
 
-pool_function <- function(mids, delta_0, delta_1) {
+pool_function <- function(mids, delta_0, delta_1, equation) {
+  eq <- parse(text = equation)
   df <- as.data.frame(summary(mice::pool(with(
     data = mids,
-    expr = lm(typical_occFUP ~ auditCscore + intervention_group)
+    expr = eq
   )))) %>%
-    mutate(delta_0 = round(delta_0, 2),
-           delta_1 = round(delta_1, 2))
+    mutate(delta_0 = delta_0,
+           delta_1 = delta_1)
   return(df)
 }
 
-combine_pool <- function(list_mids, delta_G0, delta_G1){
-  parameters <- list(list_mids, delta_G0, delta_G1)
+combine_pool <- function(list_mids, delta_G0, delta_G1, equation, additive = TRUE){
+  equation_vec <- rep(equation, length(list_mids))
+  parameters <- list(list_mids, delta_G0, delta_G1, equation_vec)
   fit <- purrr::pmap_dfr(parameters, pool_function)
+  if(additive == FALSE){
+    fit <- fit %>%
+      mutate(delta_0 = exp(delta_0),
+             delta_1 = exp(delta_1))
+  }
   return(fit)
 }
